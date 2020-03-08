@@ -1,0 +1,197 @@
+/*
+ * Filename       deadlock-detection.cc
+ * Date           3/8/2020
+ * Author         Dylan Kreth
+ * Email          dylan.kreth@utdallas.edu
+ * Course         CS 4348.001 Spring 2020
+ * Copyright      2020, All Rights Reserved
+ * Procedures:
+ * main - performs a deadlock detection algorithm on a set of given data
+ * //TODO fill in rest of methods
+ */
+
+#include <iostream>
+#include <fstream>
+#include <string.h>
+#include <cstdlib>
+#include <vector>
+#include "deadlock-detection.h"
+
+using namespace std;
+
+/***************************************************************************
+* int main( int argc, char **argv )
+* Author: Dylan Kreth
+* Date: 3/8/2020
+* Description:  performs a deadlock detection algorithm on a set of given data
+*
+* Parameters:
+* argc I/P int The number of arguments on the command line
+* argv I/P char *[] The arguments on the command line. 
+* 		argv[1] shall be an int that defines the number of resources
+* 		argv[2] shall be an int that defines the number of processes
+* main O/P int Status code (not currently used)
+**************************************************************************/
+int main(int argc, char *argv[])
+{
+	if (argc < 3)
+	{
+		cerr << "too few command arguments provided!" << endl;
+		return 1; //
+	}
+
+	cout << "program started with the following specs:" << endl;
+
+	int numResources = atoi(argv[1]);
+	cout << "Number of Resources: " << numResources << endl;
+
+	int numProcesses = atoi(argv[2]);
+	cout << "Number of Processes: " << numProcesses << endl;
+
+	bool process[numProcesses];
+	for (int i = 0; i < numProcesses; i++)
+	{
+		process[i] = false;
+	}
+
+	cout << endl;
+
+	ifstream requestMatrixFile; // ifstream needs to be passed by reference instead of being returned bc there is no copy constructor
+	customOpen(requestMatrixFile,"Request Matrix", "reqMat.txt"); //opens the file based on user prompt
+
+	ifstream allocationMatrixFile;
+	customOpen(allocationMatrixFile, "Allocation Matrix", "allocMat.txt"); //opens the file based on user prompt
+	// ifstream resourceVectorFile = customOpen("Resource Vector", "resVect.txt"); //opens the file based on user prompt
+	// ifstream availableVectorFile = customOpen("Available Vector", "availVect.txt"); //opens the file based on user prompt
+
+	vector <vector <int>> requestMatrix(numResources, vector<int>(numProcesses));
+	requestMatrix = parseRequestMatrixFile(requestMatrixFile, numProcesses, numResources);
+
+	vector <vector <int>> allocationMatrix(numResources, vector<int>(numProcesses));
+	allocationMatrix = parseRequestMatrixFile(allocationMatrixFile, numProcesses, numResources);
+
+
+
+	// prints the contents of the request matrix
+	for(int process = 0; process < numProcesses; process++){
+		for(int resource = 0; resource < numResources; resource++){
+			cout << allocationMatrix[resource][process] << " " << flush;
+		}
+		cout << endl;
+	}
+
+
+	// prints the first line of the available vector to make sure that it opened correctly
+	// string str;
+	// getline(availableVectorFile, str);
+	// cout << str << endl;
+
+	cout << "Success!" << endl;
+
+	return 0;
+}
+
+/***************************************************************************
+* string getFileName
+* Author: Dylan Kreth
+* Date: 3/8/2020
+* Description: returns the file name provided by the user, or returns the default if no name is provided
+* Parameters:
+* defaultName I/P the name returned if no name is provided to cin
+* fileName O/P the the file name provided by the user, or the defaultName if no name is provided
+**************************************************************************/
+string getFileName(string defaultName)
+{
+	string fileName;
+	if (cin.peek() == '\n')
+	{
+		fileName = defaultName;
+	}
+	else
+	{
+		cin >> fileName;
+	}
+
+	clearcin(); //clears the \n character out of the cin buffer
+
+	return fileName;
+}
+
+/***************************************************************************
+* string customOpen
+* Author: Dylan Kreth
+* Date: 3/8/2020
+* Description: returns the file name provided by the user, or returns the default if no name is provided
+* Parameters:
+* formalName I/P the name to be used in the user prompt (ex. "Request Matrix")
+* defaultFileName I/P the name of the file to open if no name is provided to cin (ex. "reqMat.txt")
+* filestream O/P the the ifstream opened using the computed file name
+**************************************************************************/
+int customOpen(ifstream& filestream, string formalName, string defaultFileName)
+{
+
+	//print prompt
+	cout << "Enter the name of the file that contains the "
+		 << formalName //ex. Request Matrix
+		 << " [default = "
+		 << defaultFileName // ex. reqMat.txt
+		 << "]: "
+		 << flush; //print, but no newline char
+
+	string fileName = getFileName(defaultFileName); // we need the file name to open the file
+	// ifstream filestream;							//stream for opening the file
+	cout << "Opening file " << fileName << endl;	//notify the user in case of typo
+	filestream.open(fileName);						//open the file so we can read it
+
+	//if the file fails to open, close the program
+	if (!filestream)
+	{
+		cerr << "Unable to open "
+			 << formalName
+			 << " file ("
+			 << fileName
+			 << "). Aborting."
+			 << endl;
+		exit(1);
+	}
+	cout << endl;
+
+	return 1; //return 1 on success
+}
+
+/***************************************************************************
+* void clearcin
+* Author: Dylan Kreth
+* Date: 3/8/2020
+* Description: clears the cin buffer
+**************************************************************************/
+void clearcin()
+{
+	string buf;		   //create a buffer to hold the \n
+	getline(cin, buf); //grab the \n from the command line
+}
+
+/***************************************************************************
+* void parseRequestMatrixFile
+* Author: Dylan Kreth
+* Date: 3/8/2020
+* Description: parses the file and returns a vector with the contents of the file
+* Parameters:
+* ifstream I/P the file to be read from (pass by reference)
+* numProcesses I/P number of processes
+* numResources I/P number of resources
+* requestMatrix O/P vector that holds the matrix that was parsed from the file
+**************************************************************************/
+vector<vector<int>> parseRequestMatrixFile(ifstream& file, int numProcesses, int numResources){
+	if(!file)
+		exit(1); //if file isn't open, program is hosed so just exit
+	vector <vector <int>> requestMatrix(numResources, vector<int>(numProcesses)); //declare vector of proper size
+	for(int process = 0; process < numProcesses; process++){ //fill the vector with matrix data from file
+		for(int resource = 0; resource < numResources; resource++){
+			file >> requestMatrix[resource][process];
+		}
+	}
+
+	return requestMatrix;
+
+}
