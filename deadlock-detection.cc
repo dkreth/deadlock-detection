@@ -6,8 +6,15 @@
  * Course         CS 4348.001 Spring 2020
  * Copyright      2020, All Rights Reserved
  * Procedures:
- * main - performs a deadlock detection algorithm on a set of given data
- * //TODO fill in rest of methods
+ * 		main - performs a deadlock detection algorithm on a set of given data
+ * 		getFileName - returns the file name provided by the user, or returns the default if no name is provided
+ * 		customOpen - returns the file name provided by the user, or returns the default if no name is provided
+ * 		clearcin - clears the cin buffer
+ * 		parseVectorFile - parseMatrixFile - parses the file and returns a vector with the contents of the file
+ * 		parses the file and returns a vector with the contents of the file
+ * 		markSatisfiedProcess - Mark each process that has a row in the Allocation matrix of all zeros.
+ * 		sufficientResources - determines whether or not there are sufficient resources of each resource of available vector to satisfy request of process p in request matrix
+ * 		increment - add values of each resource of process p in allocationMatrix to w
  */
 
 #include <iostream>
@@ -34,18 +41,18 @@ using namespace std;
 **************************************************************************/
 int main(int argc, char *argv[])
 {
-	if (argc < 3)
+	if (argc < 3) // filename, numResources, and numProcesses
 	{
 		cerr << "too few command arguments provided!" << endl;
-		return 1; //
+		exit(1); // if there aren't enough command line args, exit bc algorithm cannout execute
 	}
 
 
-	int numResources = atoi(argv[1]);
+	int numResources = atoi(argv[1]); // get the number of resources from the command line arg as an int
 
-	int numProcesses = atoi(argv[2]);
+	int numProcesses = atoi(argv[2]); // get the number of processes from the command line arg as an int
 
-	cout << "=====================SETUP=======================" << endl;
+	cout << "=====================SETUP=======================" << endl; //style
 
 	ifstream requestMatrixFile; // ifstream needs to be passed by reference instead of being returned bc there is no copy constructor
 	customOpen(requestMatrixFile,"Request Matrix", "reqMat.txt"); //opens the file based on user prompt
@@ -69,30 +76,30 @@ int main(int argc, char *argv[])
 	vector <int> availableVector(numResources); //declare vector of proper size
 	availableVector = parseVectorFile(availableVectorFile, numResources); // fill the vector with data from the file
 
-	cout << "\n=====================SPECS=======================" << endl;
+	cout << "\n=====================SPECS=======================" << endl; //style
 
-	cout << "Program started with the following specs:" << endl;
-	cout << "Number of Resources: " << numResources << endl;
-	cout << "Number of Processes: " << numProcesses << endl;
+	cout << "Program started with the following specs:" << endl; //inform user
+	cout << "Number of Resources: " << numResources << endl; //inform user
+	cout << "Number of Processes: " << numProcesses << endl; //inform user
 
 
 
 	// prints the contents of the request matrix
-	cout << endl << "Request matrix Q:" << endl;
-	for(int process = 0; process < numProcesses; process++){
-		for(int resource = 0; resource < numResources; resource++){
+	cout << endl << "Request matrix Q:" << endl; // header before printing data
+	for(int process = 0; process < numProcesses; process++){ //for each process...
+		for(int resource = 0; resource < numResources; resource++){ // ...go thru each resource and print the value
 			cout << requestMatrix[resource][process] << " " << flush;
 		}
-		cout << endl;
+		cout << endl; //style
 	}
 
 	// prints the contents of the allocation matrix
-	cout << endl << "Allocation matrix A:" << endl;
-	for(int process = 0; process < numProcesses; process++){
-		for(int resource = 0; resource < numResources; resource++){
+	cout << endl << "Allocation matrix A:" << endl; // header before printing data
+	for(int process = 0; process < numProcesses; process++){ // for each process...
+		for(int resource = 0; resource < numResources; resource++){ // ...go thru each resource and print the value
 			cout << allocationMatrix[resource][process] << " " << flush;
 		}
-		cout << endl;
+		cout << endl; //style
 	}
 
 	// // prints the contents of the resource vector
@@ -104,17 +111,17 @@ int main(int argc, char *argv[])
 
 
 	// prints the contents of the available vector
-	cout << endl << "Available vector:" << endl;
-	for(int resource = 0; resource < numResources; resource++){
-		cout << availableVector[resource] << " " << flush;
+	cout << endl << "Available vector:" << endl; // header before printing data
+	for(int resource = 0; resource < numResources; resource++){ // for each resource...
+		cout << availableVector[resource] << " " << flush; // ...go thru and print the value
 	}
-	cout << endl;
+	cout << endl; //style
 
 
 	bool processMarked[numProcesses]; // keeps track of which processes are marked
-	for (int i = 0; i < numProcesses; i++)
+	for (int i = 0; i < numProcesses; i++) // go thru each process...
 	{
-		processMarked[i] = false;
+		processMarked[i] = false; //... and set each to false (unmarked) to start
 	}
 
 	markSatisfiedProcesses(allocationMatrix, processMarked, numProcesses, numResources); // A process that has no allocated resources cannot participate in a deadlock
@@ -131,7 +138,7 @@ int main(int argc, char *argv[])
 	* Find an index i such that process i is currently unmarked and the ith row of Q
 	* is less than or equal to W. That is, Qik … Wk, for 1 … k … m. If no such row is
 	* found, terminate the algorithm.
-	* 4. If such a row is found, mark process i and add the corresponding row of the allocation matrix to W. That is, set Wk = Wk + Aik, for 1 … k … m. Return to step 3
+	* If such a row is found, mark process i and add the corresponding row of the allocation matrix to W. That is, set Wk = Wk + Aik, for 1 … k … m. Return to step 3
 	*/
 	bool needToRepeat; //flipped to true if any changes are made
 	do {
@@ -144,29 +151,29 @@ int main(int argc, char *argv[])
 				continue; // start over
 			}
 		}
-	} while(needToRepeat);
+	} while(needToRepeat); // keep repeating until there are no unmarked processes that can be satisfied
 
-	int unmarkedCount = 0;
-	for(int process = 0; process < numProcesses; process++){
+	int unmarkedCount = 0; // start with no unmarked processes
+	for(int process = 0; process < numProcesses; process++){ // go thru each process...
 		if(!processMarked[process])
-			unmarkedCount++;
+			unmarkedCount++; // ...and count how many are unmarked
 	}
 
-	cout << "\n=====================RESULTS=======================" << endl; 
-	cout << "Number of processes left unmarked: " << unmarkedCount << endl;
+	cout << "\n=====================RESULTS=======================" << endl; //style
+	cout << "Number of processes left unmarked: " << unmarkedCount << endl; // header before printing data
 	if(unmarkedCount == 0)
-		cout << "Therefore, no deadlock exists!" << endl;
+		cout << "Therefore, no deadlock exists!" << endl; // all processes marked, so no deadlock
 	else {
-		cout << "Therefore, deadlock exists!" << endl;
-		cout << "Processes caught in deadlock: " << flush;
+		cout << "Therefore, deadlock exists!" << endl; // unmarked processes, so deadlock
+		cout << "Processes caught in deadlock: " << flush; // header before printing
 		for(int i = 0; i < numProcesses; i++){
 			if(!processMarked[i])
-				cout << "P" << i+1 << " " << flush;
+				cout << "P" << i+1 << " " << flush; // print the unmarked process (they're the ones in deadlock)
 		}
-		cout << endl;
+		cout << endl; //style
 	}
 
-	cout << "Algorithm completed successfully." << endl;
+	cout << "Algorithm completed successfully." << endl; // tell the user we're done
 
 	return 0;
 }
@@ -182,19 +189,19 @@ int main(int argc, char *argv[])
 **************************************************************************/
 string getFileName(string defaultName)
 {
-	string fileName;
-	if (cin.peek() == '\n')
+	string fileName; //to fill
+	if (cin.peek() == '\n') //if user presses enter...
 	{
-		fileName = defaultName;
+		fileName = defaultName; // ...use the dafault name
 	}
 	else
 	{
-		cin >> fileName;
+		cin >> fileName; // otherwise, read from the command line
 	}
 
 	clearcin(); //clears the \n character out of the cin buffer
 
-	return fileName;
+	return fileName; // we need the file name
 }
 
 /***************************************************************************
@@ -231,7 +238,7 @@ void customOpen(ifstream& filestream, string formalName, string defaultFileName)
 			 << fileName
 			 << "). Aborting."
 			 << endl;
-		exit(1);
+		exit(1); //exit bc program is hosed
 	}
 
 }
@@ -263,13 +270,13 @@ vector<vector<int>> parseMatrixFile(ifstream& file, int numProcesses, int numRes
 	if(!file)
 		exit(1); //if file isn't open, program is hosed so just exit
 	vector <vector <int>> matrix(numResources, vector<int>(numProcesses)); //declare vector of proper size
-	for(int process = 0; process < numProcesses; process++){ //fill the vector with matrix data from file
-		for(int resource = 0; resource < numResources; resource++){
-			file >> matrix[resource][process];
+	for(int process = 0; process < numProcesses; process++){ // go thru each process-
+		for(int resource = 0; resource < numResources; resource++){ // -resource pair and 
+			file >> matrix[resource][process]; //fill the vector with matrix data from file
 		}
 	}
 
-	return matrix;
+	return matrix; //we need the generated matrix
 
 }
 
@@ -291,7 +298,7 @@ vector<int> parseVectorFile(ifstream& file, int size){
 		file >> vect[val];
 	}
 
-	return vect;
+	return vect; //we need this vector
 
 }
 
@@ -334,18 +341,18 @@ void markSatisfiedProcesses(vector <vector <int>> allocationMatrix, bool process
 * sufficientResources O/P whether or not there are sufficient resources of each resource of available vector to satisfy request of process p in request matrix
 **************************************************************************/
 bool sufficientResources(vector <vector <int>> requestMatrix, vector <int> availableVector, int process, int numResources){
-	for(int resource = 0; resource < numResources; resource++){
-		if(requestMatrix[resource][process] > availableVector[resource])
+	for(int resource = 0; resource < numResources; resource++){ // for each resource in the given process...
+		if(requestMatrix[resource][process] > availableVector[resource]) // ...check if what we're asking for is more than what we have
 			return false; // return false if we find a resource for which there is an insufficiency in the available vector
 	}
-	return true; // if all are sufficient, return true
+	return true; // if each is sufficient then they are all collectively sufficient
 }
 
 /***************************************************************************
 * void increment
 * Author: Dylan Kreth
 * Date: 3/8/2020
-* Description: add values of each resource of process p in allocationMatrix to w
+* Description: add values of each resource of given process in allocationMatrix to w
 * Parameters:
 * w I/O matrix with available values of each resource
 * allocationMatrix I/P matrix with allocation values of each process-resource pair
