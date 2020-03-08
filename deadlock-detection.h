@@ -21,10 +21,10 @@
 std::string getFileName(std::string defaultName);
 void customOpen(std::ifstream& filestream, std::string formalName, std::string defaultFileName);
 void clearcin();
-std::vector<std::vector<int>> parseMatrixFile(std::ifstream& file, int numProcesses, int numResources);
+std::vector<std::vector<int> > parseMatrixFile(std::ifstream& file, int numProcesses, int numResources);
 std::vector<int> parseVectorFile(std::ifstream& file, int size);
-void markSatisfiedProcesses(std::vector <std::vector <int>> allocationMatrix, bool processMarked[], int numProcesses, int numResources);
-bool sufficientResources(std::vector <std::vector <int>> requestMatrix, std::vector <int> availableVector, int process, int numResources);
-void increment(std::vector<int>& w, std::vector <std::vector <int>> allocationMatrix, int process, int numResources);
+void markSatisfiedProcesses(std::vector <std::vector <int> > allocationMatrix, bool processMarked[], int numProcesses, int numResources);
+bool sufficientResources(std::vector <std::vector <int> > requestMatrix, std::vector <int> availableVector, int process, int numResources);
+void increment(std::vector<int>& w, std::vector <std::vector <int> > allocationMatrix, int process, int numResources);
 
 #endif /* __DEADLOCK_H__ */

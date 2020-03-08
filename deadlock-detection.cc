@@ -56,13 +56,13 @@ int main(int argc, char *argv[])
 
 	ifstream requestMatrixFile; // ifstream needs to be passed by reference instead of being returned bc there is no copy constructor
 	customOpen(requestMatrixFile,"Request Matrix", "reqMat.txt"); //opens the file based on user prompt
-	vector <vector <int>> requestMatrix(numResources, vector<int>(numProcesses)); //define the vector for the requestMatrix
+	vector <vector <int> > requestMatrix(numResources, vector<int>(numProcesses)); //define the vector for the requestMatrix
 	requestMatrix = parseMatrixFile(requestMatrixFile, numProcesses, numResources); // fill the vector with data from the file
 
 
 	ifstream allocationMatrixFile; // ifstream needs to be passed by reference instead of being returned bc there is no copy constructor
 	customOpen(allocationMatrixFile, "Allocation Matrix", "allocMat.txt"); //opens the file based on user prompt
-	vector <vector <int>> allocationMatrix(numResources, vector<int>(numProcesses)); //define the vector for the requestMatrix
+	vector <vector <int> > allocationMatrix(numResources, vector<int>(numProcesses)); //define the vector for the requestMatrix
 	allocationMatrix = parseMatrixFile(allocationMatrixFile, numProcesses, numResources); // fill the vector with data from the file
 
 	// the below code can be used if the avaible vector file is provided
@@ -266,10 +266,10 @@ void clearcin()
 * numResources I/P number of resources
 * requestMatrix O/P vector that holds the matrix that was parsed from the file
 **************************************************************************/
-vector<vector<int>> parseMatrixFile(ifstream& file, int numProcesses, int numResources){
+vector<vector<int> > parseMatrixFile(ifstream& file, int numProcesses, int numResources){
 	if(!file)
 		exit(1); //if file isn't open, program is hosed so just exit
-	vector <vector <int>> matrix(numResources, vector<int>(numProcesses)); //declare vector of proper size
+	vector <vector <int> > matrix(numResources, vector<int>(numProcesses)); //declare vector of proper size
 	for(int process = 0; process < numProcesses; process++){ // go thru each process-
 		for(int resource = 0; resource < numResources; resource++){ // -resource pair and 
 			file >> matrix[resource][process]; //fill the vector with matrix data from file
@@ -313,7 +313,7 @@ vector<int> parseVectorFile(ifstream& file, int size){
 * numProcesses I/P number of processes
 * numResources I/P number of resources
 **************************************************************************/
-void markSatisfiedProcesses(vector <vector <int>> allocationMatrix, bool processMarked[], int numProcesses, int numResources) {
+void markSatisfiedProcesses(vector <vector <int> > allocationMatrix, bool processMarked[], int numProcesses, int numResources) {
 	for(int process = 0; process < numProcesses; process++){
 		// if(processMarked[process]) // optimization: skip any processes that are already marked
 		// 	continue;
@@ -340,7 +340,7 @@ void markSatisfiedProcesses(vector <vector <int>> allocationMatrix, bool process
 * numResources I/P total number of different resources in the system
 * sufficientResources O/P whether or not there are sufficient resources of each resource of available vector to satisfy request of process p in request matrix
 **************************************************************************/
-bool sufficientResources(vector <vector <int>> requestMatrix, vector <int> availableVector, int process, int numResources){
+bool sufficientResources(vector <vector <int> > requestMatrix, vector <int> availableVector, int process, int numResources){
 	for(int resource = 0; resource < numResources; resource++){ // for each resource in the given process...
 		if(requestMatrix[resource][process] > availableVector[resource]) // ...check if what we're asking for is more than what we have
 			return false; // return false if we find a resource for which there is an insufficiency in the available vector
@@ -359,7 +359,7 @@ bool sufficientResources(vector <vector <int>> requestMatrix, vector <int> avail
 * process I/P index of process we want to check on
 * numResources I/P total number of different resources in the system
 **************************************************************************/
-void increment(vector<int> &w, vector <vector <int>> allocationMatrix, int process, int numResources){
+void increment(vector<int> &w, vector <vector <int> > allocationMatrix, int process, int numResources){
 	for(int resource = 0; resource < numResources; resource++){ //for each resource in the given process
 		w[resource] = allocationMatrix[resource][process] + w[resource]; // increase the value (of that resource) in w by the value of the same resource in the allocation matrix
 	}
