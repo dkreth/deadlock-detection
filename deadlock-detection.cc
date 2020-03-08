@@ -57,13 +57,12 @@ int main(int argc, char *argv[])
 	vector <vector <int>> allocationMatrix(numResources, vector<int>(numProcesses)); //define the vector for the requestMatrix
 	allocationMatrix = parseMatrixFile(allocationMatrixFile, numProcesses, numResources); // fill the vector with data from the file
 
-
-	ifstream resourceVectorFile; // ifstream needs to be passed by reference instead of being returned bc there is no copy constructor
-	customOpen(resourceVectorFile, "Resource Vector", "resVect.txt"); //opens the file based on user prompt
-	vector <int> resourceVector(numResources); //declare vector of proper size
-	resourceVector = parseVectorFile(resourceVectorFile, numResources); // fill the vector with data from the file
-
 	// the below code can be used if the avaible vector file is provided
+	// ifstream resourceVectorFile; // ifstream needs to be passed by reference instead of being returned bc there is no copy constructor
+	// customOpen(resourceVectorFile, "Resource Vector", "resVect.txt"); //opens the file based on user prompt
+	// vector <int> resourceVector(numResources); //declare vector of proper size
+	// resourceVector = parseVectorFile(resourceVectorFile, numResources); // fill the vector with data from the file
+
 	ifstream availableVectorFile; // ifstream needs to be passed by reference instead of being returned bc there is no copy constructor
 	customOpen(availableVectorFile, "Available Vector", "availVect.txt"); //opens the file based on user prompt
 	vector <int> availableVector(numResources); //declare vector of proper size
@@ -94,12 +93,12 @@ int main(int argc, char *argv[])
 		cout << endl;
 	}
 
-	// prints the contents of the resource vector
-	cout << endl << "Resource vector:" << endl;
-	for(int resource = 0; resource < numResources; resource++){
-		cout << resourceVector[resource] << " " << flush;
-	}
-	cout << endl;
+	// // prints the contents of the resource vector
+	// cout << endl << "Resource vector:" << endl;
+	// for(int resource = 0; resource < numResources; resource++){
+	// 	cout << resourceVector[resource] << " " << flush;
+	// }
+	// cout << endl;
 
 
 	// prints the contents of the available vector
