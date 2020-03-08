@@ -227,7 +227,7 @@ void customOpen(ifstream& filestream, string formalName, string defaultFileName)
 	string fileName = getFileName(defaultFileName); // we need the file name to open the file
 	// ifstream filestream;							//stream for opening the file
 	cout << "Opening file " << fileName << endl;	//notify the user in case of typo
-	filestream.open(fileName);						//open the file so we can read it
+	filestream.open(fileName.c_str());						//open the file so we can read it
 
 	//if the file fails to open, close the program
 	if (!filestream)
