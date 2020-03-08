@@ -45,6 +45,7 @@ int main(int argc, char *argv[])
 
 	int numProcesses = atoi(argv[2]);
 
+	cout << "=====================SETUP=======================" << endl;
 
 	ifstream requestMatrixFile; // ifstream needs to be passed by reference instead of being returned bc there is no copy constructor
 	customOpen(requestMatrixFile,"Request Matrix", "reqMat.txt"); //opens the file based on user prompt
@@ -68,6 +69,7 @@ int main(int argc, char *argv[])
 	vector <int> availableVector(numResources); //declare vector of proper size
 	availableVector = parseVectorFile(availableVectorFile, numResources); // fill the vector with data from the file
 
+	cout << "\n=====================SPECS=======================" << endl;
 
 	cout << "Program started with the following specs:" << endl;
 	cout << "Number of Resources: " << numResources << endl;
