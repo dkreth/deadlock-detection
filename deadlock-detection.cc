@@ -196,7 +196,7 @@ string getFileName(string defaultName)
 }
 
 /***************************************************************************
-* string customOpen
+* void customOpen
 * Author: Dylan Kreth
 * Date: 3/8/2020
 * Description: returns the file name provided by the user, or returns the default if no name is provided
@@ -247,7 +247,7 @@ void clearcin()
 }
 
 /***************************************************************************
-* void parseMatrixFile
+* vector<vector<int>> parseMatrixFile
 * Author: Dylan Kreth
 * Date: 3/8/2020
 * Description: parses the file and returns a vector with the contents of the file
@@ -272,7 +272,7 @@ vector<vector<int>> parseMatrixFile(ifstream& file, int numProcesses, int numRes
 }
 
 /***************************************************************************
-* void parseVectorFile
+* vector<int> parseVectorFile
 * Author: Dylan Kreth
 * Date: 3/8/2020
 * Description: parses the file and returns a vector with the contents of the file
