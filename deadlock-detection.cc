@@ -120,8 +120,29 @@ int main(int argc, char *argv[])
 	// for(int i = 0; i<numProcesses; i++)
 	// 	cout << processMarked[i] << " " << flush;
 
+	vector<int> w = availableVector; // Initialize a temporary vector W equal the Available vector.
+	// // prints the W vector for manual verification
+	// for(int i = 0; i<numResources; i++)
+	// 	cout << w[i] << " " << flush;
 
-	cout << "Success!" << endl;
+	/*
+	* Find an index i such that process i is currently unmarked and the ith row of Q
+	* is less than or equal to W. That is, Qik … Wk, for 1 … k … m. If no such row is
+	* found, terminate the algorithm.
+	* 4. If such a row is found, mark process i and add the corresponding row of the allocation matrix to W. That is, set Wk = Wk + Aik, for 1 … k … m. Return to step 3
+	*/
+	bool needToRepeat; //flipped to true if any changes are made
+	do {
+		needToRepeat = false;
+		for(int process = 0; process < numProcesses; process++){ // check each process
+			if(!processMarked[process] && sufficientResources(requestMatrix, availableVector, process, numResources)){ // find a process that is currently unmarked for which there are enough resources to satisfy the request
+				processMarked[process] = true; //mark that process
+				increment(w, allocationMatrix, process, numResources); // free the resources in the allocation matrix that correspond to the marked process and add them to w
+				needToRepeat = true; // repeat, skipping this process from now on
+				continue; // start over
+			}
+		}
+	} while(needToRepeat);
 
 	return 0;
 }
@@ -277,4 +298,41 @@ void markSatisfiedProcesses(vector <vector <int>> allocationMatrix, bool process
 	}
 
 
+}
+
+/***************************************************************************
+* bool sufficientResources
+* Author: Dylan Kreth
+* Date: 3/8/2020
+* Description: determines whether or not there are sufficient resources of each resource of available vector to satisfy request of process p in request matrix
+* Parameters:
+* requestMatrix I/P matrix with the resources being requested
+* availableVector I/P vector with which resources are currently available
+* process I/P index of process we want to check on
+* numResources I/P total number of different resources in the system
+* sufficientResources O/P whether or not there are sufficient resources of each resource of available vector to satisfy request of process p in request matrix
+**************************************************************************/
+bool sufficientResources(vector <vector <int>> requestMatrix, vector <int> availableVector, int process, int numResources){
+	for(int resource = 0; resource < numResources; resource++){
+		if(requestMatrix[resource][process] > availableVector[resource])
+			return false; // return false if we find a resource for which there is an insufficiency in the available vector
+	}
+	return true; // if all are sufficient, return true
+}
+
+/***************************************************************************
+* void increment
+* Author: Dylan Kreth
+* Date: 3/8/2020
+* Description: add values of each resource of process p in allocationMatrix to w
+* Parameters:
+* w I/O matrix with available values of each resource
+* allocationMatrix I/P matrix with allocation values of each process-resource pair
+* process I/P index of process we want to check on
+* numResources I/P total number of different resources in the system
+**************************************************************************/
+void increment(vector<int> &w, vector <vector <int>> allocationMatrix, int process, int numResources){
+	for(int resource = 0; resource < numResources; resource++){ //for each resource in the given process
+		w[resource] = allocationMatrix[resource][process] + w[resource]; // increase the value (of that resource) in w by the value of the same resource in the allocation matrix
+	}
 }
