@@ -65,10 +65,10 @@ int main(int argc, char *argv[])
 	// ifstream availableVectorFile = customOpen("Available Vector", "availVect.txt"); //opens the file based on user prompt
 
 	vector <vector <int>> requestMatrix(numResources, vector<int>(numProcesses));
-	requestMatrix = parseRequestMatrixFile(requestMatrixFile, numProcesses, numResources);
+	requestMatrix = parseMatrixFile(requestMatrixFile, numProcesses, numResources);
 
 	vector <vector <int>> allocationMatrix(numResources, vector<int>(numProcesses));
-	allocationMatrix = parseRequestMatrixFile(allocationMatrixFile, numProcesses, numResources);
+	allocationMatrix = parseMatrixFile(allocationMatrixFile, numProcesses, numResources);
 
 
 
@@ -172,7 +172,7 @@ void clearcin()
 }
 
 /***************************************************************************
-* void parseRequestMatrixFile
+* void parseMatrixFile
 * Author: Dylan Kreth
 * Date: 3/8/2020
 * Description: parses the file and returns a vector with the contents of the file
@@ -182,7 +182,7 @@ void clearcin()
 * numResources I/P number of resources
 * requestMatrix O/P vector that holds the matrix that was parsed from the file
 **************************************************************************/
-vector<vector<int>> parseRequestMatrixFile(ifstream& file, int numProcesses, int numResources){
+vector<vector<int>> parseMatrixFile(ifstream& file, int numProcesses, int numResources){
 	if(!file)
 		exit(1); //if file isn't open, program is hosed so just exit
 	vector <vector <int>> requestMatrix(numResources, vector<int>(numProcesses)); //declare vector of proper size
