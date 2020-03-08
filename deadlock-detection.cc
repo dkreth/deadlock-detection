@@ -115,8 +115,7 @@ int main(int argc, char *argv[])
 		processMarked[i] = false;
 	}
 
-	performStep1(allocationMatrix, processMarked, numProcesses, numResources); // A process that has no allocated resources cannot participate in a deadlock
-
+	markSatisfiedProcesses(allocationMatrix, processMarked, numProcesses, numResources); // A process that has no allocated resources cannot participate in a deadlock
 	// // prints the processMarked array for manual verification
 	// for(int i = 0; i<numProcesses; i++)
 	// 	cout << processMarked[i] << " " << flush;
@@ -255,17 +254,17 @@ vector<int> parseVectorFile(ifstream& file, int size){
 }
 
 /***************************************************************************
-* void performStep1
+* void markSatisfiedProcesses
 * Author: Dylan Kreth
 * Date: 3/8/2020
-* Description: performs step 1 of the deadlock algorithm. Mark each process that has a row in the Allocation matrix of all zeros.
+* Description: Mark each process that has a row in the Allocation matrix of all zeros.
 * Parameters:
 * allocationMatrix I/P the allocation matrix being checked
 * processMarked[] I/O array that says which processes are marked
 * numProcesses I/P number of processes
 * numResources I/P number of resources
 **************************************************************************/
-void performStep1(vector <vector <int>> allocationMatrix, bool processMarked[], int numProcesses, int numResources) {
+void markSatisfiedProcesses(vector <vector <int>> allocationMatrix, bool processMarked[], int numProcesses, int numResources) {
 	for(int process = 0; process < numProcesses; process++){
 		// if(processMarked[process]) // optimization: skip any processes that are already marked
 		// 	continue;
