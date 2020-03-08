@@ -144,11 +144,11 @@ int main(int argc, char *argv[])
 	do {
 		needToRepeat = false;
 		for(int process = 0; process < numProcesses; process++){ // check each process
-			if(!processMarked[process] && sufficientResources(requestMatrix, availableVector, process, numResources)){ // find a process that is currently unmarked for which there are enough resources to satisfy the request
+			if(!processMarked[process] && sufficientResources(requestMatrix, w, process, numResources)){ // find a process that is currently unmarked for which there are enough resources to satisfy the request
 				processMarked[process] = true; //mark that process
 				increment(w, allocationMatrix, process, numResources); // free the resources in the allocation matrix that correspond to the marked process and add them to w
 				needToRepeat = true; // repeat, skipping this process from now on
-				continue; // start over
+				break; // start over
 			}
 		}
 	} while(needToRepeat); // keep repeating until there are no unmarked processes that can be satisfied
