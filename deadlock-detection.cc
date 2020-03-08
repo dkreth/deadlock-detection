@@ -40,21 +40,11 @@ int main(int argc, char *argv[])
 		return 1; //
 	}
 
-	cout << "program started with the following specs:" << endl;
 
 	int numResources = atoi(argv[1]);
-	cout << "Number of Resources: " << numResources << endl;
 
 	int numProcesses = atoi(argv[2]);
-	cout << "Number of Processes: " << numProcesses << endl;
 
-	bool process[numProcesses];
-	for (int i = 0; i < numProcesses; i++)
-	{
-		process[i] = false;
-	}
-
-	cout << endl;
 
 	ifstream requestMatrixFile; // ifstream needs to be passed by reference instead of being returned bc there is no copy constructor
 	customOpen(requestMatrixFile,"Request Matrix", "reqMat.txt"); //opens the file based on user prompt
@@ -73,26 +63,52 @@ int main(int argc, char *argv[])
 	vector <int> resourceVector(numResources); //declare vector of proper size
 	resourceVector = parseVectorFile(resourceVectorFile, numResources); // fill the vector with data from the file
 
-	// // the below code can be used if the avaible vector file is provided
-	// ifstream availableVectorFile; // ifstream needs to be passed by reference instead of being returned bc there is no copy constructor
-	// customOpen(availableVectorFile, "Available Vector", "availVect.txt"); //opens the file based on user prompt
-	// vector <int> availableVector(numResources); //declare vector of proper size
-	// availableVector = parseVectorFile(availableVectorFile, numResources); // fill the vector with data from the file
+	// the below code can be used if the avaible vector file is provided
+	ifstream availableVectorFile; // ifstream needs to be passed by reference instead of being returned bc there is no copy constructor
+	customOpen(availableVectorFile, "Available Vector", "availVect.txt"); //opens the file based on user prompt
+	vector <int> availableVector(numResources); //declare vector of proper size
+	availableVector = parseVectorFile(availableVectorFile, numResources); // fill the vector with data from the file
+
+
+	cout << "Program started with the following specs:" << endl;
+	cout << "Number of Resources: " << numResources << endl;
+	cout << "Number of Processes: " << numProcesses << endl;
 
 
 
-	// // prints the contents of the vector
-	// for(int resource = 0; resource < numResources; resource++){
-	// 	cout << resourceVector[resource] << " " << flush;
-	// }
+	// prints the contents of the request matrix
+	cout << endl << "Request matrix Q:" << endl;
+	for(int process = 0; process < numProcesses; process++){
+		for(int resource = 0; resource < numResources; resource++){
+			cout << requestMatrix[resource][process] << " " << flush;
+		}
+		cout << endl;
+	}
 
-	// // prints the contents of the request matrix
-	// for(int process = 0; process < numProcesses; process++){
-	// 	for(int resource = 0; resource < numResources; resource++){
-	// 		cout << allocationMatrix[resource][process] << " " << flush;
-	// 	}
-	// 	cout << endl;
-	// }
+	// prints the contents of the allocation matrix
+	cout << endl << "Allocation matrix A:" << endl;
+	for(int process = 0; process < numProcesses; process++){
+		for(int resource = 0; resource < numResources; resource++){
+			cout << allocationMatrix[resource][process] << " " << flush;
+		}
+		cout << endl;
+	}
+
+	// prints the contents of the resource vector
+	cout << endl << "Resource vector:" << endl;
+	for(int resource = 0; resource < numResources; resource++){
+		cout << resourceVector[resource] << " " << flush;
+	}
+	cout << endl;
+
+
+	// prints the contents of the available vector
+	cout << endl << "Available vector:" << endl;
+	for(int resource = 0; resource < numResources; resource++){
+		cout << availableVector[resource] << " " << flush;
+	}
+	cout << endl;
+
 
 
 	// prints the first line of the available vector to make sure that it opened correctly
