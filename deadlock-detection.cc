@@ -110,11 +110,18 @@ int main(int argc, char *argv[])
 	cout << endl;
 
 
+	bool processMarked[numProcesses]; // keeps track of which processes are marked
+	for (int i = 0; i < numProcesses; i++)
+	{
+		processMarked[i] = false;
+	}
 
-	// prints the first line of the available vector to make sure that it opened correctly
-	// string str;
-	// getline(availableVectorFile, str);
-	// cout << str << endl;
+	performStep1(allocationMatrix, processMarked, numProcesses, numResources); // A process that has no allocated resources cannot participate in a deadlock
+
+	// // prints the processMarked array for manual verification
+	// for(int i = 0; i<numProcesses; i++)
+	// 	cout << processMarked[i] << " " << flush;
+
 
 	cout << "Success!" << endl;
 
@@ -245,5 +252,31 @@ vector<int> parseVectorFile(ifstream& file, int size){
 	}
 
 	return vect;
+
+}
+
+/***************************************************************************
+* void performStep1
+* Author: Dylan Kreth
+* Date: 3/8/2020
+* Description: performs step 1 of the deadlock algorithm. Mark each process that has a row in the Allocation matrix of all zeros.
+* Parameters:
+* allocationMatrix I/P the allocation matrix being checked
+* processMarked[] I/O array that says which processes are marked
+* numProcesses I/P number of processes
+* numResources I/P number of resources
+**************************************************************************/
+void performStep1(vector <vector <int>> allocationMatrix, bool processMarked[], int numProcesses, int numResources) {
+	for(int process = 0; process < numProcesses; process++){
+		// if(processMarked[process]) // optimization: skip any processes that are already marked
+		// 	continue;
+		bool allZero = true; // assume all zero
+		for(int resource = 0; resource < numResources; resource++){ // iterate thru each resource in a given process
+			if(allocationMatrix[resource][process] != 0)
+				allZero = false; // change assumption if we find a non-zero resource in the process
+		}
+		processMarked[process] = allZero; // mark this process if all its resources were zero
+	}
+
 
 }
