@@ -203,9 +203,8 @@ string getFileName(string defaultName)
 * Parameters:
 * formalName I/P the name to be used in the user prompt (ex. "Request Matrix")
 * defaultFileName I/P the name of the file to open if no name is provided to cin (ex. "reqMat.txt")
-* filestream O/P the the ifstream opened using the computed file name
 **************************************************************************/
-int customOpen(ifstream& filestream, string formalName, string defaultFileName)
+void customOpen(ifstream& filestream, string formalName, string defaultFileName)
 {
 
 	//print prompt
@@ -232,9 +231,7 @@ int customOpen(ifstream& filestream, string formalName, string defaultFileName)
 			 << endl;
 		exit(1);
 	}
-	cout << endl;
 
-	return 1; //return 1 on success
 }
 
 /***************************************************************************
