@@ -144,6 +144,28 @@ int main(int argc, char *argv[])
 		}
 	} while(needToRepeat);
 
+	int unmarkedCount = 0;
+	for(int process = 0; process < numProcesses; process++){
+		if(!processMarked[process])
+			unmarkedCount++;
+	}
+
+	cout << "\n=====================RESULTS=======================" << endl; 
+	cout << "Number of processes left unmarked: " << unmarkedCount << endl;
+	if(unmarkedCount == 0)
+		cout << "Therefore, no deadlock exists!" << endl;
+	else {
+		cout << "Therefore, deadlock exists!" << endl;
+		cout << "Processes caught in deadlock: " << flush;
+		for(int i = 0; i < numProcesses; i++){
+			if(!processMarked[i])
+				cout << "P" << i+1 << " " << flush;
+		}
+		cout << endl;
+	}
+
+	cout << "Algorithm completed successfully." << endl;
+
 	return 0;
 }
 
