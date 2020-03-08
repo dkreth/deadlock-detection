@@ -58,27 +58,41 @@ int main(int argc, char *argv[])
 
 	ifstream requestMatrixFile; // ifstream needs to be passed by reference instead of being returned bc there is no copy constructor
 	customOpen(requestMatrixFile,"Request Matrix", "reqMat.txt"); //opens the file based on user prompt
+	vector <vector <int>> requestMatrix(numResources, vector<int>(numProcesses)); //define the vector for the requestMatrix
+	requestMatrix = parseMatrixFile(requestMatrixFile, numProcesses, numResources); // fill the vector with data from the file
 
-	ifstream allocationMatrixFile;
+
+	ifstream allocationMatrixFile; // ifstream needs to be passed by reference instead of being returned bc there is no copy constructor
 	customOpen(allocationMatrixFile, "Allocation Matrix", "allocMat.txt"); //opens the file based on user prompt
-	// ifstream resourceVectorFile = customOpen("Resource Vector", "resVect.txt"); //opens the file based on user prompt
-	// ifstream availableVectorFile = customOpen("Available Vector", "availVect.txt"); //opens the file based on user prompt
-
-	vector <vector <int>> requestMatrix(numResources, vector<int>(numProcesses));
-	requestMatrix = parseMatrixFile(requestMatrixFile, numProcesses, numResources);
-
-	vector <vector <int>> allocationMatrix(numResources, vector<int>(numProcesses));
-	allocationMatrix = parseMatrixFile(allocationMatrixFile, numProcesses, numResources);
+	vector <vector <int>> allocationMatrix(numResources, vector<int>(numProcesses)); //define the vector for the requestMatrix
+	allocationMatrix = parseMatrixFile(allocationMatrixFile, numProcesses, numResources); // fill the vector with data from the file
 
 
+	ifstream resourceVectorFile; // ifstream needs to be passed by reference instead of being returned bc there is no copy constructor
+	customOpen(resourceVectorFile, "Resource Vector", "resVect.txt"); //opens the file based on user prompt
+	vector <int> resourceVector(numResources); //declare vector of proper size
+	resourceVector = parseVectorFile(resourceVectorFile, numResources); // fill the vector with data from the file
 
-	// prints the contents of the request matrix
-	for(int process = 0; process < numProcesses; process++){
-		for(int resource = 0; resource < numResources; resource++){
-			cout << allocationMatrix[resource][process] << " " << flush;
-		}
-		cout << endl;
-	}
+	// // the below code can be used if the avaible vector file is provided
+	// ifstream availableVectorFile; // ifstream needs to be passed by reference instead of being returned bc there is no copy constructor
+	// customOpen(availableVectorFile, "Available Vector", "availVect.txt"); //opens the file based on user prompt
+	// vector <int> availableVector(numResources); //declare vector of proper size
+	// availableVector = parseVectorFile(availableVectorFile, numResources); // fill the vector with data from the file
+
+
+
+	// // prints the contents of the vector
+	// for(int resource = 0; resource < numResources; resource++){
+	// 	cout << resourceVector[resource] << " " << flush;
+	// }
+
+	// // prints the contents of the request matrix
+	// for(int process = 0; process < numProcesses; process++){
+	// 	for(int resource = 0; resource < numResources; resource++){
+	// 		cout << allocationMatrix[resource][process] << " " << flush;
+	// 	}
+	// 	cout << endl;
+	// }
 
 
 	// prints the first line of the available vector to make sure that it opened correctly
@@ -185,13 +199,35 @@ void clearcin()
 vector<vector<int>> parseMatrixFile(ifstream& file, int numProcesses, int numResources){
 	if(!file)
 		exit(1); //if file isn't open, program is hosed so just exit
-	vector <vector <int>> requestMatrix(numResources, vector<int>(numProcesses)); //declare vector of proper size
+	vector <vector <int>> matrix(numResources, vector<int>(numProcesses)); //declare vector of proper size
 	for(int process = 0; process < numProcesses; process++){ //fill the vector with matrix data from file
 		for(int resource = 0; resource < numResources; resource++){
-			file >> requestMatrix[resource][process];
+			file >> matrix[resource][process];
 		}
 	}
 
-	return requestMatrix;
+	return matrix;
+
+}
+
+/***************************************************************************
+* void parseVectorFile
+* Author: Dylan Kreth
+* Date: 3/8/2020
+* Description: parses the file and returns a vector with the contents of the file
+* Parameters:
+* ifstream I/P the file to be read from (pass by reference)
+* size I/P number of values in the vector of the specified file
+* vect O/P vector that holds the vector that was parsed from the file
+**************************************************************************/
+vector<int> parseVectorFile(ifstream& file, int size){
+	if(!file)
+		exit(1); //if file isn't open, program is hosed so just exit
+	vector <int> vect(size); //declare vector of proper size
+	for(int val = 0; val < size; val++){ //fill the vector with matrix data from file
+		file >> vect[val];
+	}
+
+	return vect;
 
 }

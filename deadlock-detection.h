@@ -22,6 +22,7 @@ std::string getFileName(std::string defaultName);
 int customOpen(std::ifstream& filestream, std::string formalName, std::string defaultFileName);
 void clearcin();
 std::vector<std::vector<int>> parseMatrixFile(std::ifstream& file, int numProcesses, int numResources);
+std::vector<int> parseVectorFile(std::ifstream& file, int size);
 
 
 #endif /* __DEADLOCK_H__ */
